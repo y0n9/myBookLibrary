@@ -1,10 +1,16 @@
-import { Router } from 'express';
-const router = Router();
+const express = require('express');
+const router = express.Router();
+const Book = require('../models/book')
 
 
-
-router.get('/', (req, res) => {
-    res.render('Hello world')
+router.get('/', async(req, res) => {
+    let books
+    try {
+        books = await Book.find().sort({ createdAt: desc }).limit(10).exec()
+    } catch (error) {
+        books = []
+    }
+    res.render('index', { books: books })
 })
 
-export default router
+module.exports = router
